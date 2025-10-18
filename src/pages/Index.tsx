@@ -49,13 +49,13 @@ const Index = () => {
     {
       id: 1,
       name: 'KANDYSLY',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=KANDYSLY',
+      avatar: 'https://api.dicebear.com/7.x/big-ears/svg?seed=KANDYSLY&backgroundColor=b6e3f4,c0aede,d1d4f9',
       bio: 'Писатель, журналист, исследователь современной культуры'
     },
     {
       id: 2,
       name: 'Bold AVANTE',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=BoldAVANTE',
+      avatar: 'https://api.dicebear.com/7.x/big-ears/svg?seed=BoldAVANTE&backgroundColor=ffd5dc,ffdfbf,d1d4f9',
       bio: 'Арт-директор, фотограф, визуальный рассказчик'
     }
   ];
