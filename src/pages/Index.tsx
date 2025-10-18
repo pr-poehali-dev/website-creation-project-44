@@ -44,6 +44,8 @@ const Index = () => {
   const [activeTab, setActiveTab] = useState<'blog' | 'portfolio'>('blog');
   const [expandedArticle, setExpandedArticle] = useState<number | null>(null);
   const [newComment, setNewComment] = useState<{ [key: number]: string }>({});
+  const [selectedAuthor, setSelectedAuthor] = useState<number | null>(null);
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
 
   const authors: Author[] = [
     {
@@ -132,6 +134,19 @@ const Index = () => {
     }
   };
 
+  const allTags = Array.from(new Set(articles.flatMap(article => article.tags)));
+
+  const filteredArticles = articles.filter(article => {
+    if (selectedAuthor && article.author.id !== selectedAuthor) return false;
+    if (selectedTag && !article.tags.includes(selectedTag)) return false;
+    return true;
+  });
+
+  const resetFilters = () => {
+    setSelectedAuthor(null);
+    setSelectedTag(null);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-border sticky top-0 bg-background/95 backdrop-blur-sm z-50">
@@ -178,16 +193,25 @@ const Index = () => {
               <h3 className="text-2xl font-heading font-semibold mb-8">Наши авторы</h3>
               <div className="grid md:grid-cols-2 gap-6">
                 {authors.map((author) => (
-                  <Card key={author.id} className="hover-scale border-border/50">
+                  <Card 
+                    key={author.id} 
+                    className={`hover-scale border-border/50 cursor-pointer transition-all ${
+                      selectedAuthor === author.id ? 'ring-2 ring-primary bg-primary/5' : ''
+                    }`}
+                    onClick={() => setSelectedAuthor(selectedAuthor === author.id ? null : author.id)}
+                  >
                     <CardContent className="p-6 flex items-start gap-4">
                       <Avatar className="h-16 w-16">
                         <AvatarImage src={author.avatar} alt={author.name} />
                         <AvatarFallback>{author.name[0]}</AvatarFallback>
                       </Avatar>
-                      <div>
+                      <div className="flex-1">
                         <h4 className="font-heading text-xl font-semibold mb-1">{author.name}</h4>
                         <p className="text-muted-foreground text-sm">{author.bio}</p>
                       </div>
+                      {selectedAuthor === author.id && (
+                        <Icon name="Check" size={20} className="text-primary" />
+                      )}
                     </CardContent>
                   </Card>
                 ))}
@@ -195,9 +219,41 @@ const Index = () => {
             </section>
 
             <section>
-              <h3 className="text-2xl font-heading font-semibold mb-8">Последние публикации</h3>
+              <div className="flex items-center justify-between mb-8">
+                <h3 className="text-2xl font-heading font-semibold">Последние публикации</h3>
+                {(selectedAuthor || selectedTag) && (
+                  <Button variant="outline" size="sm" onClick={resetFilters}>
+                    <Icon name="X" size={16} className="mr-2" />
+                    Сбросить фильтры
+                  </Button>
+                )}
+              </div>
+
+              <div className="mb-6 flex flex-wrap gap-2">
+                {allTags.map((tag) => (
+                  <Badge
+                    key={tag}
+                    variant={selectedTag === tag ? 'default' : 'outline'}
+                    className="cursor-pointer hover-scale"
+                    onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}
+                  >
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+
+              {filteredArticles.length === 0 && (
+                <div className="text-center py-16">
+                  <Icon name="Search" size={48} className="mx-auto text-muted-foreground mb-4" />
+                  <p className="text-xl text-muted-foreground">Статей с выбранными фильтрами не найдено</p>
+                  <Button variant="link" onClick={resetFilters} className="mt-4">
+                    Сбросить фильтры
+                  </Button>
+                </div>
+              )}
+
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {articles.map((article) => (
+                {filteredArticles.map((article) => (
                   <Card key={article.id} className="group overflow-hidden hover-scale border-border/50">
                     <div className="relative overflow-hidden aspect-[4/3]">
                       <img
