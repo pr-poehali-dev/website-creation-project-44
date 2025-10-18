@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
 import Icon from '@/components/ui/icon';
 
 interface Author {
@@ -46,6 +47,7 @@ const Index = () => {
   const [newComment, setNewComment] = useState<{ [key: number]: string }>({});
   const [selectedAuthor, setSelectedAuthor] = useState<number | null>(null);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   const authors: Author[] = [
     {
@@ -139,12 +141,15 @@ const Index = () => {
   const filteredArticles = articles.filter(article => {
     if (selectedAuthor && article.author.id !== selectedAuthor) return false;
     if (selectedTag && !article.tags.includes(selectedTag)) return false;
+    if (searchQuery && !article.title.toLowerCase().includes(searchQuery.toLowerCase()) && 
+        !article.excerpt.toLowerCase().includes(searchQuery.toLowerCase())) return false;
     return true;
   });
 
   const resetFilters = () => {
     setSelectedAuthor(null);
     setSelectedTag(null);
+    setSearchQuery('');
   };
 
   return (
@@ -221,12 +226,23 @@ const Index = () => {
             <section>
               <div className="flex items-center justify-between mb-8">
                 <h3 className="text-2xl font-heading font-semibold">Последние публикации</h3>
-                {(selectedAuthor || selectedTag) && (
+                {(selectedAuthor || selectedTag || searchQuery) && (
                   <Button variant="outline" size="sm" onClick={resetFilters}>
                     <Icon name="X" size={16} className="mr-2" />
                     Сбросить фильтры
                   </Button>
                 )}
+              </div>
+
+              <div className="mb-6 relative">
+                <Icon name="Search" size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  type="text"
+                  placeholder="Поиск статей по заголовку или описанию..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10 py-6 text-base"
+                />
               </div>
 
               <div className="mb-6 flex flex-wrap gap-2">
