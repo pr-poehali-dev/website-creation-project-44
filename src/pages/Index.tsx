@@ -48,14 +48,14 @@ const Index = () => {
   const authors: Author[] = [
     {
       id: 1,
-      name: 'Анна Соколова',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Anna',
+      name: 'KANDYSLY',
+      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=KANDYSLY',
       bio: 'Писатель, журналист, исследователь современной культуры'
     },
     {
       id: 2,
-      name: 'Дмитрий Волков',
-      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Dmitry',
+      name: 'Bold AVANTE',
+      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=BoldAVANTE',
       bio: 'Арт-директор, фотограф, визуальный рассказчик'
     }
   ];
